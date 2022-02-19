@@ -51,6 +51,7 @@ export default Index
 export const pageQuery = graphql`
   query GhostPostQuery($limit: Int!, $skip: Int!) {
     allGhostPost(
+        filter: {tags: {elemMatch: {slug: {eq: "hash-fr" }}}}
         sort: { order: DESC, fields: [published_at] },
         limit: $limit,
         skip: $skip
