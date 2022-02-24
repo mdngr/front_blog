@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'gatsby'
+import { useIntl } from "gatsby-plugin-intl"
 
 /**
 * Navigation component
@@ -12,11 +13,19 @@ import { Link } from 'gatsby'
 * to a `site-nav-item` class.
 *
 */
+
+
+
 const Navigation = ({ data, navClass }) => (
     <>
-        {data.map((navItem, i) => {
+        {
+        data.map((navItem, i) => {
+            // Making useIntl available in the code
+            const intl = useIntl()
+            // Use language iso for the routes
+            const locale = intl.locale !== "es" ? `/${intl.locale}` : ""
             if (navItem.url.match(/^\s?http(s?)/gi)) {
-                return <a className={navClass} href={navItem.url} key={i} target="_blank" rel="noopener noreferrer">👉 Réservez vos daycations</a>
+                return <a className={navClass} href={navItem.url} key={i} target="_blank" rel="noopener noreferrer">👉 {intl.formatMessage({ id: "book_daycations" })}</a>
             } else {
                 return <Link className={navClass} to={navItem.url} key={i}>{navItem.label}</Link>
             }

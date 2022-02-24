@@ -3,13 +3,16 @@ import PropTypes from 'prop-types'
 import { Link } from 'gatsby'
 import { Tags } from '@tryghost/helpers-gatsby'
 import { readingTime as readingTimeHelper } from '@tryghost/helpers'
+import { useIntl } from "gatsby-plugin-intl"
+
 
 const PostCard = ({ post }) => {
-    const url = `/${post.slug}/`
+
+    const url = `${post.slug}/`
     const readingTime = readingTimeHelper(post)
 
     return (
-        <Link to={url} className="post-card">
+        <Link to={`${url}`} className="post-card">
             <header className="post-card-header">
                 {post.feature_image &&
                     <div className="post-card-image" style={{
@@ -19,7 +22,7 @@ const PostCard = ({ post }) => {
                 {post.featured && <span>Featured</span>}
                 <h2 className="post-card-title">{post.title}</h2>
             </header>
-            <section className="post-card-excerpt">{post.excerpt}</section>
+            <section className="post-card-excerpt">{post.excerpt.substring(0,110)}...</section>
             <footer className="post-card-footer">
                 <div className="post-card-footer-left">
                     <div className="post-card-avatar">

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Helmet } from 'react-helmet'
 import { Link, StaticQuery, graphql } from 'gatsby'
 import Img from 'gatsby-image'
+import { useIntl } from "gatsby-plugin-intl"
 
 import { Navigation } from '.'
 import config from '../../utils/siteConfig'
@@ -23,6 +24,11 @@ const DefaultLayout = ({ data, children, bodyClass, isHome }) => {
     const twitterUrl = site.twitter ? `https://twitter.com/${site.twitter.replace(/^@/, ``)}` : null
     const facebookUrl = site.facebook ? `https://www.facebook.com/${site.facebook.replace(/^\//, ``)}` : null
 
+    // Making useIntl available in the code
+    const intl = useIntl()
+    // Use language iso for the routes
+    const locale = intl.locale !== "es" ? `/${intl.locale}` : ""
+
     return (
         <>
             <Helmet>
@@ -35,7 +41,7 @@ const DefaultLayout = ({ data, children, bodyClass, isHome }) => {
 
                 <div className="viewport-top">
                     {/* The main header section on top of the screen */}
-                    <header className="site-head" style={{ ...site.cover_image && { backgroundImage: `url(https://hotelbreakblog.s3.eu-west-3.amazonaws.com/la-demeure-montaigne-paris-spa.jpg)` } }}>
+                    <header className="site-head" style={{ ...site.cover_image && { backgroundImage: `url(${intl.locale === 'fr' ? "https://hotelbreakblog.s3.eu-west-3.amazonaws.com/la-demeure-montaigne-paris-spa.jpg" : "https://s3-eu-west-3.amazonaws.com/hotelbreakblog/2021/03/1615897055623.jpeg"})` } }}>
                         <div className="container">
                             <div className="site-mast">
                                 <div className="site-mast-left">
@@ -48,8 +54,8 @@ const DefaultLayout = ({ data, children, bodyClass, isHome }) => {
                             </div>
                             { isHome ?
                                 <div className="site-banner">
-                                    <h1 className="site-banner-title">hotelbreak, <i>le blog</i></h1>
-                                    <p className="site-banner-desc">Profitez des spas, piscines et restaurants des meilleurs hôtels sans y dormir</p>
+                                    <h1 className="site-banner-title">{intl.formatMessage({ id: "home" })}</h1>
+                                    <p className="site-banner-desc">{intl.formatMessage({ id: "description" })}</p>
                                 </div> :
                                 null}
                             <nav className="site-nav">
@@ -76,7 +82,7 @@ const DefaultLayout = ({ data, children, bodyClass, isHome }) => {
                     <footer className="site-foot">
                         <div className="site-foot-nav container">
                             <div className="site-foot-nav-left">
-                                <Link to="/">hotelbreak, <i>le blog</i></Link> © {new Date().getFullYear()}
+                                <Link to="/">{intl.formatMessage({ id: "home" })}</Link> © {new Date().getFullYear()}
                             </div>
                             <div className="site-foot-nav-right">
                                 <Navigation data={site.navigation} navClass="site-foot-nav-item" />

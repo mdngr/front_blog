@@ -187,5 +187,18 @@ module.exports = {
         `gatsby-plugin-react-helmet`,
         `gatsby-plugin-force-trailing-slashes`,
         `gatsby-plugin-offline`,
+        {
+          resolve: `gatsby-plugin-intl`,
+          options: {
+            // Directory with the strings JSON
+            path: `${__dirname}/src/intl`,
+            // Supported languages
+            languages: [`es`, `fr`],
+            // Default site language
+            defaultLanguage: `es`,
+            // Redirects to `/es` in the route `/`
+            redirect: false,
+          },
+        },
     ],
 }

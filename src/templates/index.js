@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { graphql } from 'gatsby'
-
+import { useIntl } from "gatsby-plugin-intl"
 import { Layout, PostCard, Pagination } from '../components/common'
 import { MetaData } from '../components/common/meta'
 
@@ -14,7 +14,18 @@ import { MetaData } from '../components/common/meta'
 *
 */
 const Index = ({ data, location, pageContext }) => {
+    
+
+    // Making useIntl available in the code
+    const intl = useIntl()
+    // Use language iso for the routes
+    const locale = intl.locale !== "es" ? `/${intl.locale}` : ""
+
     const posts = data.allGhostPost.edges
+
+    const findLocale = intl.locale !== "fr" ? "hash-es" : "hash-fr"
+
+    const filterredPosts = posts.filter(d => d.node.tags.find(t => findLocale.includes(t.slug)))  
 
     return (
         <>
@@ -22,7 +33,7 @@ const Index = ({ data, location, pageContext }) => {
             <Layout isHome={true}>
                 <div className="container">
                     <section className="post-feed">
-                        {posts.map(({ node }) => (
+                        {filterredPosts.map(({ node }) => (
                             // The tag below includes the markup for each post - components/common/PostCard.js
                             <PostCard key={node.id} post={node} />
                         ))}
@@ -51,7 +62,6 @@ export default Index
 export const pageQuery = graphql`
   query GhostPostQuery($limit: Int!, $skip: Int!) {
     allGhostPost(
-        filter: {tags: {elemMatch: {slug: {eq: "hash-fr" }}}}
         sort: { order: DESC, fields: [published_at] },
         limit: $limit,
         skip: $skip
